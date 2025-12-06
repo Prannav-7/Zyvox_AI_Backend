@@ -11,15 +11,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-const corsOptions = {
-  origin: [
-    'https://zyvox-ai-backend.onrender.com',
+// Parse CORS origins from environment
+const getFrontendOrigins = () => {
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const urls = frontendUrl.split('||').map(url => url.trim());
+  return [
+    ...urls,
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5174',
-    '*'
-  ],
+    'https://zyvox-ai-backend.onrender.com'
+  ];
+};
+
+// Middleware
+const corsOptions = {
+  origin: getFrontendOrigins(),
   credentials: true
 };
 
